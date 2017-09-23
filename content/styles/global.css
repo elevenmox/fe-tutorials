@@ -1,0 +1,38 @@
+﻿body {
+	margin: 0;
+	padding: 0;
+	font-size: 12pt;
+	font-family: sans-serif;
+	color: #111;
+}
+
+.main {
+	width: 1200px;
+	margin: 10px auto;
+}
+
+.overlapping {
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+.front, .ground {
+	z-index: 1;
+	position: absolute;
+}
+.front {
+	z-index: 2;
+	width: 100%;
+}
+.ground {
+	z-index: -1;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+}
+.coordinate svg {
+	border: 1px solid #DDD;
+	border-radius: 5px;
+	box-shadow: 1px 1px 1px #EAEAEA;
+}
+
