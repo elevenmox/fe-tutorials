@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Line with d3</title>
+</head>
+<body>
+	<section>
+		<h2>Line Chart</h2>
+		<div class="svg-line"></div>
+	</section>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/d3-selection-multi.v0.4.min.js"></script>
+<script src="d3-kits.js"></script>
+<script>
+	//"use strict";
+	window.onload = function(){
+		showLine();
+	}
+	
+	function showLine(){
+		// original data
+		let data = [[0,0],[10,50],[50,100],[100,70]];
+
+		// canvas setting
+		let width = 400;
+		let height = 400;
+		let padding = formatPadding(30, 30, 30, 50);
+
+		let setting = {
+			"data": data,
+			"area": {"width": width, "height": height},
+			"padding": padding
+		};
+
+		let svg_width = width + padding.left + padding.right;
+		let svg_height = height + padding.top + padding.bottom;
+
+		// scale and target points
+		initScaleAndPoints(data, setting);
+
+		// set container
+		let container = d3.select(".svg-line").append("svg");
+		container.attrs({
+			"width": svg_width,
+			"height": svg_height
+		});
+
+		drawLine(container, setting);
+		drawScatter(container, setting);
+		drawLabel(container, setting);
+		drawAxis(container, setting);
+	}
+</script>
+</body>
+</html>

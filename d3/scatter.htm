@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>scatter with d3</title>
+</head>
+<body>
+	<section>
+		<h2>Scatter Chart</h2>
+		<div class="svg-scatter"></div>
+	</section>
+<script src="../ref/d3/d3.js"></script>
+<script src="../ref/d3/d3-selection-multi.js"></script>
+<script>
+	window.onload = function(){
+		showScatter();
+	}
+	
+	function showScatter(){
+		// original data
+		let points = [
+			{"x": 0, "y": 0.5},
+			{"x": 0, "y": 3},
+			{"x": 1.2, "y": 2.9},
+			{"x": 3.3, "y": 5.5},
+			{"x": 0.6, "y": 0.7},
+			{"x": 3.5, "y": 0.5},
+			{"x": 3.5, "y": 5},
+			{"x": 3.5, "y": 0}
+		];
+
+		// canvas setting
+		let width = 300;
+		let height = 300;
+
+		let padding = {"top": 30, "right": 30, "bottom": 30, "left": 50};
+
+		let svg_width = width + padding.left + padding.right;
+		let svg_height = height + padding.top + padding.bottom;
+
+		// scale
+		let ratio = 1.2;
+		let scaleX = d3.scaleLinear()
+			.domain([0, ratio * d3.max(points, (value, index) => value.x)])
+			.range([0, width]);
+		let scaleY = d3.scaleLinear()
+			.domain([0, ratio * d3.max(points, (value, index) => value.y)])
+			.range([height, 0]);
+
+		// set container
+		let container = d3.select(".svg-scatter").append("svg");
+		container.attrs({
+			"width": svg_width,
+			"height": svg_height
+		});
+
+		// draw all the points
+		let circles = container.selectAll("circle")
+			.data(points)
+			.enter()
+			.append("circle")
+			.attrs({
+				"fill":"#F00",
+				"r": 5,
+				"cx": (value) => padding.left + scaleX(value.x),
+				"cy": (value) => padding.bottom + scaleY(value.y)
+			});
+
+		// draw axis (command: append("g").attrs(...).call(axis) )
+		var axis_container = container.append("g")
+			.attrs({
+				"class": "coordinate",
+				"transform": "translate(" + padding.left + ", " + padding.top + ")"
+			});
+
+		let axisX = d3.axisBottom()
+			.scale(scaleX);
+		axis_container.append("g")
+			.attrs({
+				"class": "axis axis-x",
+				"transform": "translate(0, " + height + ")"
+			})
+			.call(axisX);
+
+		let axisY = d3.axisLeft()
+			.scale(scaleY);
+		axis_container.append("g")
+			.attrs({
+				"class": "axis axis-y"
+			})
+			.call(axisY);
+	}
+</script>
+</body>
+</html>
