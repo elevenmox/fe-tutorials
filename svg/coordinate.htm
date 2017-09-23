@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>How to create coordinate in the background as reference lines</title>
+	<link rel="stylesheet" href="../content/styles/global.css" />
+	<style>
+		.result {
+			width: 200px;
+			height: 200px;
+			border: 1px solid #f00;
+		}
+		.result.big {
+			width: 250px;
+			height: 250px;
+		}
+	</style>
+</head>
+<body>
+	<div class="main">
+		<div class="result">
+			something should be here.
+		</div>
+		<br>
+		<div class="result">
+			123
+		</div>
+		<br>
+		<div class="result big">
+			ABC
+		</div>
+	</div>
+
+	<script src="../ref/jquery-3.2.1.js"></script>
+	<script src="../ref/svg.js"></script>
+	<script>
+		"use strict";
+		$(function(){
+			$(".result").each( (i, v) => {
+				let item = $(v);
+				setCoordinate(item, 20);
+			});
+		});
+
+		let corindex = 1;
+		function setCoordinate(el, span) {
+			let width = el.width();
+			let height = el.height();
+			let origin = el.html();
+			let ctnid = "test-" + corindex++;
+
+			el.addClass("overlapping");			
+			/* 
+			el.empty();
+			let front_el = $("<div class='front' />")
+				.html(origin)
+				.appendTo(el);*/
+
+			el.append($("<div class='coordinate ground' />").attr({"id": ctnid}));
+
+			let svg_container =	SVG(ctnid);
+			svg_container.attr({"width": width, "height": height});
+
+			let start_x = 0;
+			let start_y = 0;
+
+			let max_count = Math.floor(Math.max(width/span, height/span));
+			let spin = Math.floor(max_count / 4);
+			let index = 1;
+			while(true){
+				let tmp = index * span;
+				if(tmp > height)
+					break;
+				let color = index % spin == 0 ? "#CCC" : "#EEE";
+				svg_container.line(start_x, start_y + tmp, width, start_y + tmp).attr({"stroke": color});
+				index++;
+			}
+
+			index = 1;
+			while(true){
+				let tmp = index * span;
+				if(tmp > width)
+					break;
+				let color = index % spin == 0 ? "#CCC" : "#EEE";
+				svg_container.line(start_x + tmp, start_y, start_x + tmp, height).attr({"stroke": color});
+				index++;
+			}
+		}
+	</script>
+</body>
+</html>
